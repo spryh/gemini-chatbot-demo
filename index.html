@@ -8,28 +8,29 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f9fafb;
+      background-color: #f8fafc;
       max-width: 800px;
       margin: 0 auto;
       padding: 40px 20px;
-      color: #111827;
+      color: #1e293b;
     }
 
     h1 {
       font-size: 2rem;
       font-weight: 600;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
+      color: #1e293b;
     }
 
     #chatbox {
       height: 500px;
       background-color: #ffffff;
-      border-radius: 20px;
+      border-radius: 16px;
       padding: 24px;
       margin-bottom: 20px;
       overflow-y: auto;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
-      border: 1px solid #e5e7eb;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
     }
 
     .input-area {
@@ -41,12 +42,12 @@
       flex: 1;
       padding: 14px 16px;
       border-radius: 12px;
-      border: 1px solid #d1d5db;
+      border: 1px solid #cbd5e1;
       font-size: 16px;
     }
 
     button {
-      background-color: #4475f2;
+      background-color: #56A5C4;
       color: white;
       border: none;
       border-radius: 12px;
@@ -58,21 +59,21 @@
     }
 
     button:hover {
-      background-color: #325ee0;
+      background-color: #3f8fae;
     }
 
     .message {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       line-height: 1.6;
     }
 
     .user-message {
-      color: #4475f2;
+      color: #56A5C4;
       font-weight: 600;
     }
 
     .bot-message {
-      color: #374151;
+      color: #1e293b;
     }
 
     .error-message {
@@ -81,7 +82,7 @@
     }
 
     .typing-indicator {
-      color: #9ca3af;
+      color: #94a3b8;
       font-style: italic;
     }
   </style>
@@ -90,12 +91,12 @@
   <h1>Real Estate Advisor</h1>
   <div id="chatbox"></div>
   <div class="input-area">
-    <input type="text" id="userInput" placeholder="Ask a real estate question..." autocomplete="off" />
+    <input type="text" id="userInput" placeholder="Ask something about Kirkland real estate..." autocomplete="off" />
     <button onclick="sendMessage()">Send</button>
   </div>
 
   <script>
-    const API_KEY = "AIzaSyBbvl5QRipdbaL-zrZayu_-fzEt-TQQSOE"; // Replace this
+    const API_KEY = "AIzaSyBbvl5QRipdbaL-zrZayu_-fzEt-TQQSOE";
     const MODEL_NAME = "models/gemini-1.5-pro-latest";
     const API_VERSION = "v1beta";
     const chatbox = document.getElementById("chatbox");
@@ -105,8 +106,11 @@
       {
         role: "user",
         parts: [{
-          text: `You are a helpful and friendly real estate assistant here to give advice on kirkland real estate questions.
-Be sure to end the session after all questions are answered with a polite and gentle request for the user's name and phone number so one of our agents can follow up.`
+          text: `You are a helpful and friendly real estate assistant here to give advice on Kirkland, Washington real estate questions.
+
+Take an informed, familiar and concise tone.
+
+After ensuring all questions are answered, end with a polite and gentle request for the user's name and phone number so one of our agents can follow up. Do not ask more than once.`
         }]
       }
     ];
@@ -176,7 +180,7 @@ Be sure to end the session after all questions are answered with a polite and ge
     });
 
     // Initial greeting
-    addMessage("Real Estate Advisor", "Hi there! I'm here to help you with real estate questions. What would you like to know?");
+    addMessage("Real Estate Advisor", "Hi there! I'm here to help with real estate questions in Kirkland, WA. What would you like to know?");
   </script>
 </body>
 </html>
