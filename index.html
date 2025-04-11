@@ -3,88 +3,113 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gemini 1.5 Pro Chatbot v5</title>
+  <title>Real Estate Advisor</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f9fafb;
       max-width: 800px;
       margin: 0 auto;
-      padding: 20px;
-      background-color: #f5f5f5;
+      padding: 40px 20px;
     }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #111827;
+    }
+
     #chatbox {
       height: 500px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-      background: white;
+      background-color: #ffffff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
       overflow-y: auto;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
     }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
+
     #userInput {
-      width: calc(100% - 90px);
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
       font-size: 16px;
     }
+
     button {
-      width: 80px;
-      padding: 10px;
-      background-color: #4285f4;
+      background-color: #2563eb;
       color: white;
       border: none;
-      border-radius: 4px;
-      cursor: pointer;
+      border-radius: 12px;
+      padding: 12px 20px;
       font-size: 16px;
-      transition: background-color 0.3s;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
+
     button:hover {
-      background-color: #3367d6;
+      background-color: #1e40af;
     }
+
     .message {
-      margin-bottom: 12px;
-      line-height: 1.5;
+      margin-bottom: 16px;
+      line-height: 1.6;
     }
+
     .user-message {
-      color: #1a73e8;
-      font-weight: bold;
+      color: #2563eb;
+      font-weight: 600;
     }
+
     .bot-message {
-      color: #202124;
+      color: #374151;
     }
+
     .error-message {
-      color: #d93025;
+      color: #dc2626;
       font-style: italic;
     }
+
     .typing-indicator {
-      color: #5f6368;
+      color: #9ca3af;
       font-style: italic;
     }
   </style>
 </head>
 <body>
-  <h1>Gemini 1.5 Pro Chatbot</h1>
+  <h1>Real Estate Advisor</h1>
   <div id="chatbox"></div>
   <div class="input-area">
-    <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off" />
+    <input type="text" id="userInput" placeholder="Ask a real estate question..." autocomplete="off" />
     <button onclick="sendMessage()">Send</button>
   </div>
 
   <script>
-    const API_KEY = "AIzaSyBbvl5QRipdbaL-zrZayu_-fzEt-TQQSOE"; // Replace this!
+    const API_KEY = "AIzaSyBbvl5QRipdbaL-zrZayu_-fzEt-TQQSOE"; // Replace with your API key
     const MODEL_NAME = "gemini-1.5-pro-latest";
     const API_VERSION = "v1beta";
     const chatbox = document.getElementById("chatbox");
     const userInput = document.getElementById("userInput");
 
-    // Conversation history
-    const history = [];
+    const history = [
+      {
+        role: "system",
+        parts: [{
+          text: "You are a helpful and friendly assistant here to give advice on real estate questions. Always end your messages with a polite and gentle request for the user's name and phone number so one of our agents can follow up."
+        }]
+      }
+    ];
 
-    function addMessage(sender, text, messageType = "bot") {
+    function addMessage(sender, text, type = "bot") {
       const messageDiv = document.createElement("div");
-      messageDiv.className = `message ${messageType}-message`;
+      messageDiv.className = `message ${type}-message`;
       messageDiv.innerHTML = `<strong>${sender}:</strong> ${text}`;
       chatbox.appendChild(messageDiv);
       chatbox.scrollTop = chatbox.scrollHeight;
@@ -95,17 +120,11 @@
       const message = userInput.value.trim();
       if (!message) return;
 
-      // Add user message to chat
       addMessage("You", message, "user");
       userInput.value = "";
 
-      // Update conversation history
-      history.push({
-        role: "user",
-        parts: [{ text: message }]
-      });
-
-      const typingEl = addMessage("Gemini", "Typing...", "typing");
+      history.push({ role: "user", parts: [{ text: message }] });
+      const typingEl = addMessage("Real Estate Advisor", "Typing...", "typing");
 
       try {
         const response = await fetch(
@@ -118,7 +137,7 @@
             body: JSON.stringify({
               contents: history,
               generationConfig: {
-                temperature: 0.9,
+                temperature: 0.7,
                 topP: 1,
                 topK: 40,
                 maxOutputTokens: 2048
@@ -132,12 +151,13 @@
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
         if (!responseText) {
-          const errorMsg = data.error?.message || "No valid response.";
-          throw new Error(errorMsg);
+          throw new Error(data.error?.message || "No valid response.");
         }
 
-        // Add Gemini reply to chat and history
-        addMessage("Gemini", responseText, "bot");
+        // Add line breaks for readability
+        const formattedText = responseText.replace(/\n\n/g, "<br><br>");
+        addMessage("Real Estate Advisor", formattedText, "bot");
+
         history.push({
           role: "model",
           parts: [{ text: responseText }]
@@ -154,8 +174,8 @@
       if (e.key === "Enter") sendMessage();
     });
 
-    // Welcome message
-    addMessage("Gemini", "Hello! I'm Gemini 1.5 Pro. How can I help you today?");
+    // Initial welcome message
+    addMessage("Real Estate Advisor", "Hi there! I'm here to help you with real estate questions. What would you like to know?");
   </script>
 </body>
 </html>
